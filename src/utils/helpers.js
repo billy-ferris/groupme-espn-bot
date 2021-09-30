@@ -44,6 +44,25 @@ const getTeamById = (id, teams) => {
   throw Error("teams is required");
 };
 
+const getProjectedTotal = async (roster) => {
+  let projectedTotal = 0;
+  const positionsToExclude = ["Bench", "IR"];
+  const startingLineup = roster.filter(
+    ({ position }) => !positionsToExclude.includes(position)
+  );
+
+  startingLineup.forEach(({ projectedPointBreakdown }) => {
+    projectedTotal += Object.values(projectedPointBreakdown).reduce(
+      (sum, projectedPoints) => {
+        return sum + projectedPoints;
+      },
+      0
+    );
+  });
+
+  return Math.round(projectedTotal * 10) / 10;
+};
+
 const getBoxscore = async () =>
   espnClient
     .getBoxscoreForWeek({
@@ -75,6 +94,13 @@ const getBoxscore = async () =>
         return (boxscores[index] = boxscoreResult);
       });
       return boxscores;
+    })
+    .then((boxscores) => {
+      boxscores.forEach(async ({ homeTeam, awayTeam }) => {
+        homeTeam.projected = await getProjectedTotal(homeTeam.roster);
+        awayTeam.projected = await getProjectedTotal(awayTeam.roster);
+      });
+      return boxscores;
     });
 
 module.exports = {
@@ -83,4 +109,5 @@ module.exports = {
   getTeams,
   getTeamById,
   getBoxscore,
+  getProjectedTotal,
 };
