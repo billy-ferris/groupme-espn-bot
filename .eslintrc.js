@@ -1,8 +1,9 @@
 module.exports = {
   env: {
+    es6: true,
     jest: true,
   },
-  extends: "airbnb-base",
+  extends: ["prettier", "plugin:jest/recommended"],
   rules: {
     "comma-dangle": 0,
     "no-underscore-dangle": 0,
@@ -12,5 +13,8 @@ module.exports = {
     "object-curly-newline": 0,
     quotes: ["error", "double"],
     camelcase: 0,
+  },
+  parserOptions: {
+    ecmaVersion: 2017,
   },
 };

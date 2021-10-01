@@ -1,4 +1,4 @@
-const { postMessage } = require("./helpers");
+const { postMessage } = require("./espnClient-helper");
 
 describe("postMessage function", () => {
   // TODO: mock axios function to test call
@@ -7,6 +7,6 @@ describe("postMessage function", () => {
     const input = { message: "this should fail" };
     const expectedError = new Error("Message must be a string.");
     expect.assertions(1);
-    await expect(postMessage(input)).rejects.toEqual(expectedError);
+    return expect(postMessage(input)).rejects.toEqual(expectedError);
   });
 });
