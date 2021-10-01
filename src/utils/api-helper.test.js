@@ -1,4 +1,4 @@
-const { postMessage } = require("./helpers");
+const { postMessage } = require("./espnClient-helper");
 
 describe("postMessage function", () => {
   // TODO: mock axios function to test call
