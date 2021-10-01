@@ -1,12 +1,12 @@
 const axios = require("axios");
-const { BASE_ESPN_ENDPOINT } = require("./consts");
+const { ESPN_FFL_ENDPOINT, BASE_GROUPME_ENDPOINT } = require("./consts");
 const { espnClient } = require("../espnClient");
 
 const seasonId = Number(process.env.SEASON_ID);
-const { LEAGUE_ID, SEASON_ID, SWID, ESPN_S2 } = process.env;
+const { LEAGUE_ID, SEASON_ID, BOT_ID, SWID, ESPN_S2 } = process.env;
 
 const fetchLeagueEndpoint = async () => {
-  const apiUrl = `${BASE_ESPN_ENDPOINT}/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}`;
+  const apiUrl = `${ESPN_FFL_ENDPOINT}/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}`;
   const data = await axios
     .get(apiUrl, {
       headers: {
@@ -103,11 +103,30 @@ const getBoxscore = async () =>
       return boxscores;
     });
 
+const postMessage = async (message) => {
+  const url = `${BASE_GROUPME_ENDPOINT}/bots/post`;
+  if (typeof message !== "string") {
+    throw new Error("Message must be a string.");
+  }
+  const body = {
+    bot_id: BOT_ID,
+    text: message,
+  };
+  await axios
+    .post(url, body)
+    .then((res) => {
+      console.info("Message successfully posted:", body.text);
+      return res;
+    })
+    .catch((error) => console.error("Error posting message:", error.message));
+};
+
 module.exports = {
   fetchLeagueEndpoint,
   getCurrentWeek,
   getTeams,
   getTeamById,
-  getBoxscore,
   getProjectedTotal,
+  getBoxscore,
+  postMessage,
 };
