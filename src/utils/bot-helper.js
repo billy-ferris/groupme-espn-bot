@@ -1,6 +1,5 @@
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("./consts");
-
 const { BOT_ID } = process.env;
 
 const postMessage = async (message) => {
@@ -8,13 +7,13 @@ const postMessage = async (message) => {
   if (typeof message !== "string") {
     throw new Error("Message must be a string.");
   }
-  const body = {
+  const data = {
     bot_id: BOT_ID,
     text: message,
   };
   await axios
-    .post(url, body)
-    .then(() => console.info("Message successfully posted:", body.text))
+    .post(url, data)
+    .then(() => console.info("Message successfully posted:", data.text))
     .catch((error) => console.error("Error posting message:", error.message));
 };
 
