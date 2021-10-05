@@ -19,19 +19,23 @@ describe("postMessage function", () => {
       text: "test post message",
     };
     axios.post.mockResolvedValueOnce();
+
     await postMessage(mockAxiosData.text);
+
     expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleInfoSpyOn).toBeCalledTimes(1);
   });
 
-  it("should call axios and log error to console when data is invalid", async () => {
+  it("should call axios and log error to console when request fails", async () => {
     const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
     const mockAxiosData = {
       bot_id: process.env.BOT_ID,
       text: "test post message",
     };
-    axios.post.mockRejectedValueOnce(new Error("Message must be a string."));
+    axios.post.mockRejectedValueOnce(new Error());
+
     await postMessage(mockAxiosData.text);
+
     expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleErrorSpyOn).toBeCalledTimes(1);
   });
@@ -39,7 +43,7 @@ describe("postMessage function", () => {
   it("should throw an error if input is not a string", async () => {
     const input = { message: "this should fail" };
     const expectedError = new Error("Message must be a string.");
-    expect.assertions(1);
-    return expect(postMessage(input)).rejects.toEqual(expectedError);
+
+    await expect(postMessage(input)).rejects.toEqual(expectedError);
   });
 });
