@@ -3,78 +3,101 @@ const { ESPN_FFL_ENDPOINT } = require("./consts");
 const { espnClient } = require("../espnClient");
 
 const seasonId = Number(process.env.SEASON_ID);
-const { LEAGUE_ID, SEASON_ID, SWID, ESPN_S2 } = process.env;
+const { LEAGUE_ID, SWID, ESPN_S2 } = process.env;
 
 const fetchLeagueEndpoint = async () => {
-  const apiUrl = `${ESPN_FFL_ENDPOINT}/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}`;
-  const data = await axios
+  const apiUrl = `${ESPN_FFL_ENDPOINT}/seasons/${seasonId}/segments/0/leagues/${LEAGUE_ID}`;
+  return axios
     .get(apiUrl, {
       headers: {
         Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
       },
     })
-    .then((res) => res.data)
-    .catch((err) => {
-      throw Error(err);
+    .then((response) => {
+      console.info("Successfully fetched league endpoint");
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching league endpoint:\n", error);
+      throw Error("Error fetching league endpoint.");
     });
-  return data;
 };
 
 const getCurrentWeek = async () => {
-  const { scoringPeriodId } = await fetchLeagueEndpoint();
-  return scoringPeriodId;
+  try {
+    const { scoringPeriodId } = await fetchLeagueEndpoint();
+    console.info("Successfully got current week: ", scoringPeriodId);
+    return scoringPeriodId;
+  } catch (error) {
+    console.error("Error fetching current week:\n", error);
+    throw Error("Error fetching current week.");
+  }
 };
 
-const getTeams = async (year, week) => {
-  let scoringPeriod = week;
+const getTeams = async (week, year = seasonId) => {
+  let scoringPeriod;
   if (!week) {
     scoringPeriod = await getCurrentWeek();
+  } else {
+    scoringPeriod = week;
   }
-  return espnClient.getTeamsAtWeek({
-    seasonId: year,
-    scoringPeriodId: scoringPeriod,
-  });
+
+  try {
+    return await espnClient.getTeamsAtWeek({
+      seasonId: year,
+      scoringPeriodId: scoringPeriod,
+    });
+  } catch (error) {
+    console.error("Error fetching teams:\n", error);
+    throw Error("Error fetching teams.");
+  }
 };
 
 const getTeamById = (id, teams) => {
-  if (teams) {
-    const teamById = teams.filter((team) => team.id === id);
-    return teamById[0];
+  if (!teams) {
+    throw Error("teams is required.");
   }
-  throw Error("teams is required");
+  const teamById = teams.filter((team) => team.id === id);
+  return teamById[0];
 };
 
-const getProjectedTotal = async (roster) => {
-  let projectedTotal = 0;
+// TODO: find workaround for inaccurate projected totals
+const getProjectedTotal = (matchupRoster) => {
   const positionsToExclude = ["Bench", "IR"];
-  const startingLineup = roster.filter(
+  const startingLineup = matchupRoster.filter(
     ({ position }) => !positionsToExclude.includes(position)
   );
 
+  let projectedTotal = 0;
   startingLineup.forEach(({ projectedPointBreakdown }) => {
-    projectedTotal += Object.values(projectedPointBreakdown).reduce(
-      (sum, projectedPoints) => {
-        return sum + projectedPoints;
-      },
-      0
-    );
+    for (const [key, value] of Object.entries(projectedPointBreakdown)) {
+      if (key !== "usesPoints") {
+        projectedTotal += value;
+      }
+    }
   });
-
-  return Math.round(projectedTotal * 10) / 10;
+  return projectedTotal;
 };
 
-const getBoxscore = async () =>
-  espnClient
+const getBoxscores = async (week) => {
+  let scoringPeriod;
+  if (!week) {
+    scoringPeriod = await getCurrentWeek();
+  } else {
+    scoringPeriod = week;
+  }
+
+  return await espnClient
     .getBoxscoreForWeek({
       seasonId,
-      matchupPeriodId: 4,
-      scoringPeriodId: 4,
+      matchupPeriodId: scoringPeriod,
+      scoringPeriodId: scoringPeriod,
     })
     .then(async (boxscores) => {
-      const teams = await getTeams(seasonId);
+      const teams = await getTeams();
       boxscores.map(async (boxscore, index) => {
-        const homeTeamDetails = await getTeamById(boxscore.homeTeamId, teams);
-        const awayTeamDetails = await getTeamById(boxscore.awayTeamId, teams);
+        const homeTeamDetails = getTeamById(boxscore.homeTeamId, teams);
+        const awayTeamDetails = getTeamById(boxscore.awayTeamId, teams);
         const boxscoreResult = {
           homeTeam: {
             id: boxscore.homeTeamId,
@@ -97,11 +120,16 @@ const getBoxscore = async () =>
     })
     .then((boxscores) => {
       boxscores.forEach(async ({ homeTeam, awayTeam }) => {
-        homeTeam.projected = await getProjectedTotal(homeTeam.roster);
-        awayTeam.projected = await getProjectedTotal(awayTeam.roster);
+        homeTeam.projected = getProjectedTotal(homeTeam.roster);
+        awayTeam.projected = getProjectedTotal(awayTeam.roster);
       });
       return boxscores;
+    })
+    .catch((error) => {
+      console.error("Error fetching boxscores:\n", error);
+      throw Error("Error fetching boxscores.");
     });
+};
 
 module.exports = {
   fetchLeagueEndpoint,
@@ -109,5 +137,5 @@ module.exports = {
   getTeams,
   getTeamById,
   getProjectedTotal,
-  getBoxscore,
+  getBoxscores,
 };
