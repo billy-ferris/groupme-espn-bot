@@ -16,7 +16,6 @@ const fetchLeagueEndpoint = async (params) => {
       },
     })
     .then((response) => {
-      console.info("Successfully fetched league endpoint");
       return response.data;
     })
     .catch((error) => {

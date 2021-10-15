@@ -4,15 +4,15 @@ const {
   mapBoxscoreObject,
   mapBoxscoreTeamObject,
   mapBoxscorePlayerObject,
-} = require("./boxscore-helper");
+} = require("./boxscoreHelper");
 const axios = require("axios");
 
 jest.mock("axios", () => ({
   get: jest.fn(),
 }));
 
-const consoleInfoSpyOn = jest.spyOn(console, "info");
-const consoleErrorSpyOn = jest.spyOn(console, "error");
+jest.spyOn(console, "info").mockImplementation();
+const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
 describe("boxscore helper", () => {
   afterEach(() => {
@@ -467,7 +467,6 @@ describe("boxscore helper", () => {
       axios.get.mockResolvedValueOnce(expectedAxiosResponse);
 
       await expect(getBoxscores(week)).resolves.toEqual(expectedBoxscoreArray);
-      expect(consoleInfoSpyOn).toBeCalledTimes(1);
     });
 
     it("should log and throw an error on failure", async () => {
