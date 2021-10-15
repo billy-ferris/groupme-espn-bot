@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { BASE_GROUPME_ENDPOINT } = require("./consts");
+const { BASE_GROUPME_ENDPOINT } = require("../consts");
 const { BOT_ID } = process.env;
 
 const postMessage = async (message) => {
