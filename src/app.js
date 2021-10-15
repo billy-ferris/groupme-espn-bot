@@ -9,7 +9,6 @@ require("dotenv").config();
 
 const middlewares = require("./middlewares");
 const api = require("./api/v1");
-const { postMatchupsForWeek } = require("./responses/postMatchupsForWeek");
 
 const app = express();
 
@@ -25,8 +24,6 @@ app.get("/", (req, res) => {
     message: "/",
   });
 });
-
-postMatchupsForWeek(6);
 
 app.use("/api/v1", api);
 
