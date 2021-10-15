@@ -1,4 +1,4 @@
-const { postMessage } = require("./bot-helper");
+const { postMessage } = require("./botHelper");
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("../consts");
 
@@ -8,8 +8,8 @@ jest.mock("axios", () => {
   };
 });
 
-const consoleInfoSpyOn = jest.spyOn(console, "info");
-const consoleErrorSpyOn = jest.spyOn(console, "error");
+const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
+const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
 describe("postMessage function", () => {
   it("should call axios and log info to console when data is valid", async () => {
@@ -22,7 +22,7 @@ describe("postMessage function", () => {
 
     await postMessage(mockAxiosData.text);
 
-    expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
+    await expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleInfoSpyOn).toBeCalledTimes(1);
   });
 
@@ -36,7 +36,7 @@ describe("postMessage function", () => {
 
     await postMessage(mockAxiosData.text);
 
-    expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
+    await expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleErrorSpyOn).toBeCalledTimes(1);
   });
 

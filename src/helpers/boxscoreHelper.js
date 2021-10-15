@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { fetchLeagueEndpoint, getCurrentWeek } = require("./league-helper");
+const { fetchLeagueEndpoint, getCurrentWeek } = require("./leagueHelper");
 const {
   nflTeamIdToNFLTeam,
   nflTeamIdToNFLTeamAbbreviation,

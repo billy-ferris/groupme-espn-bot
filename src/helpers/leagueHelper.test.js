@@ -1,4 +1,4 @@
-const { fetchLeagueEndpoint, getCurrentWeek } = require("./league-helper");
+const { fetchLeagueEndpoint, getCurrentWeek } = require("./leagueHelper");
 const axios = require("axios");
 const { ESPN_FFL_ENDPOINT } = require("../consts");
 
@@ -9,8 +9,8 @@ jest.mock("axios", () => ({
   get: jest.fn(),
 }));
 
-const consoleInfoSpyOn = jest.spyOn(console, "info");
-const consoleErrorSpyOn = jest.spyOn(console, "error");
+jest.spyOn(console, "info").mockImplementation();
+const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
 describe("league helper", () => {
   afterEach(() => {
@@ -50,7 +50,6 @@ describe("league helper", () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(axios.get).toHaveBeenCalledWith(baseUrl, mockAxiosConfig);
-      expect(consoleInfoSpyOn).toBeCalledTimes(1);
     });
 
     it("should call axios and return league endpoint with passed parameters", async () => {
@@ -88,7 +87,6 @@ describe("league helper", () => {
 
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, mockAxiosConfig);
-      expect(consoleInfoSpyOn).toBeCalledTimes(1);
     });
 
     it("should call axios and log and throw an error on failure", async () => {
