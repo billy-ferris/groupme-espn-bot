@@ -3,7 +3,7 @@ const { getBoxscores } = require("../helpers/boxscoreHelper");
 const addOrdinal = require("../utils/addOrdinal");
 const { postMessage } = require("../helpers/botHelper");
 
-function createMatchupsString(boxscores) {
+function createMatchupStringsArray(boxscores) {
   return _.map(
     boxscores,
     ({ homeTeam, awayTeam }) =>
@@ -18,7 +18,7 @@ function createMatchupsString(boxscores) {
 const postMatchups = async (week) => {
   try {
     const boxscores = await getBoxscores(week);
-    const matchups = createMatchupsString(boxscores);
+    const matchups = createMatchupStringsArray(boxscores);
     const message = "This Week's Matchups\n\n" + matchups.join("\n\n");
     await postMessage(message);
   } catch (error) {
@@ -29,4 +29,5 @@ const postMatchups = async (week) => {
 
 module.exports = {
   postMatchups,
+  createMatchupStringsArray,
 };
