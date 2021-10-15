@@ -1,6 +1,6 @@
 const { postMessage } = require("./bot-helper");
 const axios = require("axios");
-const { BASE_GROUPME_ENDPOINT } = require("./consts");
+const { BASE_GROUPME_ENDPOINT } = require("../consts");
 
 jest.mock("axios", () => {
   return {
