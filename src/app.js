@@ -9,6 +9,7 @@ require("dotenv").config();
 
 const middlewares = require("./middlewares");
 const api = require("./api/v1");
+const botTaskScheduler = require("./utils/botTaskScheduler");
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
     message: "/",
   });
 });
+
+// botTaskScheduler();
 
 app.use("/api/v1", api);
 

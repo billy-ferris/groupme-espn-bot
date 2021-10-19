@@ -1,4 +1,4 @@
-module.exports = (num) => {
+const addOrdinal = (num) => {
   if (num === undefined || typeof num !== "number") {
     throw new Error("You must provide a number.");
   }
@@ -15,3 +15,5 @@ module.exports = (num) => {
   }
   return num + "th";
 };
+
+module.exports = addOrdinal;

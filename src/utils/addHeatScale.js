@@ -1,4 +1,4 @@
-module.exports = (streakType, streakLength) => {
+const addHeatScale = (streakType, streakLength) => {
   switch (streakType) {
     case "WIN":
       if (streakLength > 1 && streakLength < 3) {
@@ -20,3 +20,5 @@ module.exports = (streakType, streakLength) => {
       return "";
   }
 };
+
+module.exports = addHeatScale;
