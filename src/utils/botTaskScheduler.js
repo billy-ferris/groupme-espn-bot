@@ -1,5 +1,5 @@
 const CronJob = require("cron").CronJob;
-const { postMatchups } = require("../responses/postMatchups");
+const { postMatchups } = require("../responses/createMatchupsResponse");
 
 const jobs = [
   {

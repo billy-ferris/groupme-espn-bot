@@ -1,17 +1,15 @@
-const { postMatchups, createMatchupStringsArray } = require("./postMatchups");
 const axios = require("axios");
-const { BASE_GROUPME_ENDPOINT } = require("../consts");
+const { getBoxscores } = require("./getBoxscores");
 
 jest.mock("axios", () => ({
   get: jest.fn(),
-  post: jest.fn(),
 }));
 
-const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
-jest.spyOn(console, "error").mockImplementation();
+jest.spyOn(console, "info").mockImplementation();
+const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
-describe("postMatchups function", () => {
-  const currentWeek = 1;
+describe("getBoxscores function", () => {
+  const week = 1;
   const expectedAxiosResponse = {
     data: {
       gameId: 1,
@@ -103,7 +101,7 @@ describe("postMatchups function", () => {
             },
           },
           id: 1,
-          matchupPeriodId: currentWeek,
+          matchupPeriodId: week,
         },
         {
           home: {
@@ -191,7 +189,7 @@ describe("postMatchups function", () => {
             },
           },
           id: 2,
-          matchupPeriodId: currentWeek,
+          matchupPeriodId: week,
         },
       ],
       teams: [
@@ -230,36 +228,6 @@ describe("postMatchups function", () => {
       ],
     },
   };
-
-  it("should send correct post object and log successful post with message", async () => {
-    const expectedMessageString =
-      "This Week's Matchups\n\n" +
-      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\n\n" +
-      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)";
-    const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
-    const mockAxiosData = {
-      bot_id: process.env.BOT_ID,
-      text: expectedMessageString,
-    };
-
-    axios.get.mockResolvedValueOnce(expectedAxiosResponse);
-    axios.post.mockResolvedValueOnce();
-    await postMatchups(currentWeek);
-
-    expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
-    expect(consoleInfoSpyOn).toBeCalledWith(
-      "Message successfully posted:",
-      expectedMessageString
-    );
-  });
-
-  it("should throw error with message", async () => {
-    const expectedError = new Error("Error posting matchups.");
-    await expect(postMatchups()).rejects.toEqual(expectedError);
-  });
-});
-
-describe("createMatchupsString function", () => {
   const expectedBoxscoreArray = [
     {
       homeTeam: {
@@ -443,13 +411,14 @@ describe("createMatchupsString function", () => {
     },
   ];
 
-  it("should return array of matchup strings", async () => {
-    const expectedMatchupStringsArray = [
-      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)",
-      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)",
-    ];
-    expect(createMatchupStringsArray(expectedBoxscoreArray)).toEqual(
-      expectedMatchupStringsArray
-    );
+  it("should return the correctly formatted boxscore response of week", async () => {
+    axios.get.mockResolvedValueOnce(expectedAxiosResponse);
+    await expect(getBoxscores(week)).resolves.toEqual(expectedBoxscoreArray);
+  });
+
+  it("should log and throw an error on failure", async () => {
+    const expectedError = new Error("Error fetching boxscores.");
+    await expect(getBoxscores(week)).rejects.toEqual(expectedError);
+    expect(consoleErrorSpyOn).toBeCalledTimes(1);
   });
 });

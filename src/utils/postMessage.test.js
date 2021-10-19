@@ -1,4 +1,4 @@
-const { postMessage } = require("./botHelper");
+const { postMessage } = require("./postMessage");
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("../consts");
 

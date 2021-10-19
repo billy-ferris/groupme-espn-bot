@@ -1,10 +1,9 @@
 const _ = require("lodash");
-const { fetchLeagueEndpoint, getCurrentWeek } = require("./leagueHelper");
 const {
   nflTeamIdToNFLTeam,
   nflTeamIdToNFLTeamAbbreviation,
   slotCategoryIdToPositionMap,
-} = require("../consts");
+} = require("../../consts");
 
 const parseBoxscoresResponse = ({ teams, schedule }, week) => {
   const matchups = _.filter(schedule, {
@@ -74,26 +73,7 @@ const mapBoxscoreObject = ({ away, home }, teams) => {
   return boxscoreObject;
 };
 
-const getBoxscores = async (week) => {
-  let scoringPeriod;
-  if (!week) {
-    scoringPeriod = await getCurrentWeek();
-  } else {
-    scoringPeriod = week;
-  }
-
-  const urlParams = `?view=mMatchupScore&view=mScoreboard&view=mTeam&view=mRoster&scoringPeriodId=${scoringPeriod}`;
-  try {
-    const boxscoresResponse = await fetchLeagueEndpoint(urlParams);
-    return parseBoxscoresResponse(boxscoresResponse, scoringPeriod);
-  } catch (error) {
-    console.error("Error fetching boxscores:\n", error);
-    throw Error("Error fetching boxscores.");
-  }
-};
-
 module.exports = {
-  getBoxscores,
   parseBoxscoresResponse,
   mapBoxscoreObject,
   mapBoxscoreTeamObject,

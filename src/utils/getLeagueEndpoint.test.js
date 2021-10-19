@@ -1,6 +1,6 @@
-const { fetchLeagueEndpoint, getCurrentWeek } = require("./leagueHelper");
 const axios = require("axios");
 const { ESPN_FFL_ENDPOINT } = require("../consts");
+const { getLeagueEndpoint } = require("./getLeagueEndpoint");
 
 const seasonId = Number(process.env.SEASON_ID);
 const { LEAGUE_ID, SWID, ESPN_S2 } = process.env;
@@ -44,7 +44,7 @@ describe("league helper", () => {
       };
       axios.get.mockResolvedValueOnce(expectedAxiosResponse);
 
-      await expect(fetchLeagueEndpoint()).resolves.toEqual(
+      await expect(getLeagueEndpoint()).resolves.toEqual(
         expectedAxiosResponse.data
       );
 
@@ -81,7 +81,7 @@ describe("league helper", () => {
       };
       axios.get.mockResolvedValueOnce(expectedAxiosResponse);
 
-      await expect(fetchLeagueEndpoint(urlParams)).resolves.toEqual(
+      await expect(getLeagueEndpoint(urlParams)).resolves.toEqual(
         expectedAxiosResponse.data
       );
 
@@ -99,43 +99,10 @@ describe("league helper", () => {
       const expectedError = new Error("Error fetching league endpoint.");
       axios.get.mockRejectedValueOnce(expectedError);
 
-      await expect(fetchLeagueEndpoint()).rejects.toEqual(expectedError);
+      await expect(getLeagueEndpoint()).rejects.toEqual(expectedError);
 
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(axios.get).toHaveBeenCalledWith(apiUrl, mockAxiosConfig);
-      expect(consoleErrorSpyOn).toBeCalledTimes(1);
-    });
-  });
-
-  describe("getCurrentWeek function", () => {
-    it("should return the current week", async () => {
-      const currentWeek = 4;
-      const expectedAxiosResponse = {
-        data: {
-          gameId: 1,
-          id: 56951748,
-          members: [],
-          scoringPeriodId: currentWeek,
-          seasonId: 2021,
-          segmentId: 0,
-          settings: { name: "Testing league endpoint" },
-          status: {
-            currentMatchupPeriod: 4,
-            isActive: true,
-            latestScoringPeriod: 4,
-          },
-          teams: [],
-        },
-      };
-      axios.get.mockResolvedValueOnce(expectedAxiosResponse);
-
-      await expect(getCurrentWeek()).resolves.toEqual(currentWeek);
-    });
-
-    it("should log and throw an error on failure", async () => {
-      const expectedError = new Error("Error fetching current week.");
-
-      await expect(getCurrentWeek()).rejects.toEqual(expectedError);
       expect(consoleErrorSpyOn).toBeCalledTimes(1);
     });
   });
