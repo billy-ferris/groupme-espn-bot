@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const roundNumberTo = require("../../utils/roundNumberTo");
 const {
   nflTeamIdToNFLTeam,
   nflTeamIdToNFLTeamAbbreviation,
@@ -29,7 +30,7 @@ const mapBoxscorePlayerObject = ({
     eligibleSlots: _.map(eligibleSlots, (slotId) =>
       _.get(slotCategoryIdToPositionMap, slotId)
     ),
-    totalPoints: appliedStatTotal,
+    totalPoints: roundNumberTo(appliedStatTotal, 1),
   };
 };
 
@@ -56,9 +57,9 @@ const mapBoxscoreTeamObject = (
     abbrev,
     playoffSeed,
     record: overall,
-    totalPoints,
-    totalPointsLive,
-    totalProjectedPointsLive,
+    totalPoints: roundNumberTo(totalPoints, 1),
+    totalPointsLive: roundNumberTo(totalPointsLive, 1),
+    totalProjectedPointsLive: roundNumberTo(totalProjectedPointsLive, 1),
     roster: _.map(entries, (player) => mapBoxscorePlayerObject(player)),
   };
 };

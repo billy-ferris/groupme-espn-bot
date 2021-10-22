@@ -1,4 +1,4 @@
-const { handleMatchupsResponse } = require("./handleMatchupsResponse");
+const handleMatchupsResponse = require("./matchups");
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("../consts");
 
@@ -22,7 +22,7 @@ describe("createMatchupsResponse function", () => {
             teamId: 1,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 123.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -64,7 +64,7 @@ describe("createMatchupsResponse function", () => {
             teamId: 2,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 123.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -110,7 +110,7 @@ describe("createMatchupsResponse function", () => {
             teamId: 3,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 123.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -152,7 +152,7 @@ describe("createMatchupsResponse function", () => {
             teamId: 4,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 123.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -232,10 +232,12 @@ describe("createMatchupsResponse function", () => {
   };
 
   it("should send correct post object and log successful post with message", async () => {
+    const matchupStringsArray = [
+      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\nProjected Score: TST2 123.1 - TST 123.1",
+      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)\nProjected Score: TST4 123.1 - TST3 123.1",
+    ];
     const expectedMessageString =
-      "This Week's Matchups\n\n" +
-      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\n\n" +
-      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)";
+      "This Week's Matchups" + "\n\n" + matchupStringsArray.join("\n\n");
     const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
     const mockAxiosData = {
       bot_id: process.env.BOT_ID,
