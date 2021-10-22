@@ -9,9 +9,9 @@ describe("botTaskScheduler function", () => {
   jest.useFakeTimers();
   botTaskScheduler();
 
-  test.each([{ job: "Post Matchups", task: createMatchupsResponse }])(
-    "should schedule job: $job",
-    ({ task }) => {
+  test.each([createMatchupsResponse])(
+    "should run task on scheduled time",
+    (task) => {
       expect(task).not.toBeCalled();
       jest.runOnlyPendingTimers();
       expect(task).toBeCalledTimes(1);
