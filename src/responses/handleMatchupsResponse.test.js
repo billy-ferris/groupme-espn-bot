@@ -1,4 +1,4 @@
-const { createMatchupsResponse } = require("./createMatchupsResponse");
+const { handleMatchupsResponse } = require("./handleMatchupsResponse");
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("../consts");
 
@@ -244,7 +244,7 @@ describe("createMatchupsResponse function", () => {
 
     axios.get.mockResolvedValueOnce(expectedAxiosResponse);
     axios.post.mockResolvedValueOnce({ status: 200 });
-    await createMatchupsResponse(currentWeek);
+    await handleMatchupsResponse(currentWeek);
 
     expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleInfoSpyOn).toBeCalledWith(
@@ -255,6 +255,6 @@ describe("createMatchupsResponse function", () => {
 
   it("should throw error with message", async () => {
     const expectedError = new Error("Error posting matchups.");
-    await expect(createMatchupsResponse()).rejects.toEqual(expectedError);
+    await expect(handleMatchupsResponse()).rejects.toEqual(expectedError);
   });
 });

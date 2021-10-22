@@ -1,14 +1,14 @@
 const CronJob = require("cron").CronJob;
 const {
-  createMatchupsResponse,
-} = require("../responses/createMatchupsResponse");
+  handleMatchupsResponse,
+} = require("../responses/handleMatchupsResponse");
 
 const botTaskScheduler = () => {
   const jobs = [
     {
       pattern: "*/5 * * * * *",
       runTask: async () => {
-        await createMatchupsResponse();
+        await handleMatchupsResponse();
       },
     },
   ];
