@@ -28,7 +28,7 @@ describe("boxscore helper", () => {
             teamId: 1,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 1.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -70,7 +70,7 @@ describe("boxscore helper", () => {
             teamId: 2,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 1.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -116,7 +116,7 @@ describe("boxscore helper", () => {
             teamId: 3,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 1.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -158,7 +158,7 @@ describe("boxscore helper", () => {
             teamId: 4,
             totalPoints: 0,
             totalPointsLive: 0,
-            totalProjectedPointsLive: 0,
+            totalProjectedPointsLive: 1.1234,
             rosterForCurrentScoringPeriod: {
               entries: [
                 {
@@ -245,7 +245,7 @@ describe("boxscore helper", () => {
         playoffSeed: 1,
         totalPoints: 0,
         totalPointsLive: 0,
-        totalProjectedPointsLive: 0,
+        totalProjectedPointsLive: 1.1,
         record: {
           wins: 1,
           losses: 0,
@@ -289,7 +289,7 @@ describe("boxscore helper", () => {
         playoffSeed: 2,
         totalPoints: 0,
         totalPointsLive: 0,
-        totalProjectedPointsLive: 0,
+        totalProjectedPointsLive: 1.1,
         record: {
           wins: 1,
           losses: 0,
@@ -335,7 +335,7 @@ describe("boxscore helper", () => {
         playoffSeed: 3,
         totalPoints: 0,
         totalPointsLive: 0,
-        totalProjectedPointsLive: 0,
+        totalProjectedPointsLive: 1.1,
         record: {
           wins: 1,
           losses: 0,
@@ -379,7 +379,7 @@ describe("boxscore helper", () => {
         playoffSeed: 4,
         totalPoints: 0,
         totalPointsLive: 0,
-        totalProjectedPointsLive: 0,
+        totalProjectedPointsLive: 1.1,
         record: {
           wins: 1,
           losses: 0,

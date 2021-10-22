@@ -1,9 +1,7 @@
 const botTaskScheduler = require("./botTaskScheduler");
-const {
-  handleMatchupsResponse,
-} = require("../responses/handleMatchupsResponse");
+const handleMatchupsResponse = require("../responses/matchups");
 
-jest.mock("../responses/handleMatchupsResponse");
+jest.mock("../responses/matchups");
 
 describe("botTaskScheduler function", () => {
   jest.useFakeTimers();

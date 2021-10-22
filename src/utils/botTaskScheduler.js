@@ -1,7 +1,5 @@
 const CronJob = require("cron").CronJob;
-const {
-  handleMatchupsResponse,
-} = require("../responses/handleMatchupsResponse");
+const handleMatchupsResponse = require("../responses/matchups");
 
 const botTaskScheduler = () => {
   const jobs = [
