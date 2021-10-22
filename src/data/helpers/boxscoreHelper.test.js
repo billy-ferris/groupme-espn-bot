@@ -4,15 +4,13 @@ const {
   mapBoxscoreTeamObject,
   mapBoxscorePlayerObject,
 } = require("./boxscoreHelper");
-const axios = require("axios");
-const { getBoxscores } = require("../getBoxscores");
 
 jest.mock("axios", () => ({
   get: jest.fn(),
 }));
 
 jest.spyOn(console, "info").mockImplementation();
-const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
+jest.spyOn(console, "error").mockImplementation();
 
 describe("boxscore helper", () => {
   afterEach(() => {

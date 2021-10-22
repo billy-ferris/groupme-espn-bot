@@ -1,26 +1,21 @@
 const CronJob = require("cron").CronJob;
-const { postMatchups } = require("../responses/createMatchupsResponse");
+const {
+  createMatchupsResponse,
+} = require("../responses/createMatchupsResponse");
 
-const jobs = [
-  {
-    pattern: "*/5 * * * * *",
-    runTask: async () => {
-      await postMatchups();
-    },
-  },
-];
-
-const botTaskScheduler = () =>
-  jobs.forEach(({ pattern, runTask }) => {
-    new CronJob(
-      pattern,
-      async () => {
-        await runTask();
+const botTaskScheduler = () => {
+  const jobs = [
+    {
+      pattern: "*/5 * * * * *",
+      runTask: async () => {
+        await createMatchupsResponse();
       },
-      null,
-      true,
-      "America/New_York"
-    );
+    },
+  ];
+
+  jobs.forEach(({ pattern, runTask }) => {
+    new CronJob(pattern, runTask, null, true, "America/New_York");
   });
+};
 
 module.exports = botTaskScheduler;
