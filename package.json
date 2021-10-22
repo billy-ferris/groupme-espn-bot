@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^0.20.0",
     "cors": "^2.8.5",
+    "cron": "^1.8.2",
     "dotenv": "^10.0.0",
     "espn-fantasy-football-api": "^0.16.1",
     "express": "^4.17.1",

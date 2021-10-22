@@ -1,12 +1,10 @@
-const { postMessage } = require("./botHelper");
+const { postMessage } = require("./postMessage");
 const axios = require("axios");
 const { BASE_GROUPME_ENDPOINT } = require("../consts");
 
-jest.mock("axios", () => {
-  return {
-    post: jest.fn(),
-  };
-});
+jest.mock("axios", () => ({
+  post: jest.fn(),
+}));
 
 const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
 const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
