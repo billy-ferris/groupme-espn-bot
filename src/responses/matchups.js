@@ -13,7 +13,7 @@ const createMatchupStringsArray = (boxscores) =>
         homeTeam.record.wins
       }-${homeTeam.record.losses}, ${addOrdinal(homeTeam.playoffSeed)})` +
       "\n" +
-      `Projected Score: ${awayTeam.abbrev} ${awayTeam.totalProjectedPointsLive} - ${homeTeam.abbrev} ${homeTeam.totalProjectedPointsLive}`
+      `Projected Score: ${awayTeam.abbrev} ${awayTeam.totalProjectedPointsLive} - ${homeTeam.totalProjectedPointsLive} ${homeTeam.abbrev}`
   );
 
 const createMatchupsResponse = async (week) => {

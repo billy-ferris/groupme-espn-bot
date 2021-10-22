@@ -233,8 +233,8 @@ describe("createMatchupsResponse function", () => {
 
   it("should send correct post object and log successful post with message", async () => {
     const matchupStringsArray = [
-      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\nProjected Score: TST2 123.1 - TST 123.1",
-      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)\nProjected Score: TST4 123.1 - TST3 123.1",
+      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\nProjected Score: TST2 123.1 - 123.1 TST",
+      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)\nProjected Score: TST4 123.1 - 123.1 TST3",
     ];
     const expectedMessageString =
       "This Week's Matchups" + "\n\n" + matchupStringsArray.join("\n\n");
