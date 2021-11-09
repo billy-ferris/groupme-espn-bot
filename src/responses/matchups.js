@@ -26,7 +26,7 @@ const createMatchupsResponse = async (week) => {
 const handleMatchupsResponse = async (week) => {
   try {
     const message = await createMatchupsResponse(week);
-    return postMessage(message);
+    await postMessage(message);
   } catch (error) {
     console.error("Error posting matchups:\n", error);
     throw Error("Error posting matchups.");

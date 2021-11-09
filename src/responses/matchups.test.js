@@ -11,8 +11,8 @@ const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
 jest.spyOn(console, "error").mockImplementation();
 
 describe("createMatchupsResponse function", () => {
-  const currentWeek = 1;
-  const expectedAxiosResponse = {
+  const scoringPeriod = 1;
+  const mockAxiosResponse = {
     data: {
       gameId: 1,
       id: 56951748,
@@ -103,7 +103,7 @@ describe("createMatchupsResponse function", () => {
             },
           },
           id: 1,
-          matchupPeriodId: currentWeek,
+          matchupPeriodId: scoringPeriod,
         },
         {
           home: {
@@ -191,7 +191,7 @@ describe("createMatchupsResponse function", () => {
             },
           },
           id: 2,
-          matchupPeriodId: currentWeek,
+          matchupPeriodId: scoringPeriod,
         },
       ],
       teams: [
@@ -231,7 +231,7 @@ describe("createMatchupsResponse function", () => {
     },
   };
 
-  it("should send correct post object and log successful post with message", async () => {
+  test("should send correct post object and log successful post with message", async () => {
     const matchupStringsArray = [
       "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\nProjected Score: TST2 123.1 - 123.1 TST",
       "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)\nProjected Score: TST4 123.1 - 123.1 TST3",
@@ -244,9 +244,10 @@ describe("createMatchupsResponse function", () => {
       text: expectedMessageString,
     };
 
-    axios.get.mockResolvedValueOnce(expectedAxiosResponse);
+    axios.get.mockResolvedValueOnce(mockAxiosResponse);
     axios.post.mockResolvedValueOnce({ status: 200 });
-    await handleMatchupsResponse(currentWeek);
+
+    await handleMatchupsResponse(scoringPeriod);
 
     expect(axios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
     expect(consoleInfoSpyOn).toBeCalledWith(
@@ -255,8 +256,10 @@ describe("createMatchupsResponse function", () => {
     );
   });
 
-  it("should throw error with message", async () => {
+  test("should throw error with message", async () => {
     const expectedError = new Error("Error posting matchups.");
-    await expect(handleMatchupsResponse()).rejects.toEqual(expectedError);
+    await expect(handleMatchupsResponse(scoringPeriod)).rejects.toEqual(
+      expectedError
+    );
   });
 });

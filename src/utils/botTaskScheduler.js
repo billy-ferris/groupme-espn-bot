@@ -11,8 +11,8 @@ const botTaskScheduler = () => {
     },
   ];
 
-  jobs.forEach(({ pattern, runTask }) => {
-    new CronJob(pattern, runTask, null, true, "America/New_York");
+  jobs.forEach(async ({ pattern, runTask }) => {
+    await new CronJob(pattern, runTask, null, true, "America/New_York");
   });
 };
 

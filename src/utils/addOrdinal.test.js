@@ -13,12 +13,12 @@ describe("addOrdinal function", () => {
     }
   );
 
-  it("should throw an error if called without an argument", async () => {
+  test("should throw an error if called without an argument", async () => {
     const expectedErrorMessage = "You must provide a number.";
     expect(() => addOrdinal()).toThrowError(expectedErrorMessage);
   });
 
-  it("should throw an error if called without a number", async () => {
+  test("should throw an error if called without a number", async () => {
     const expectedErrorMessage = "You must provide a number.";
     expect(() => addOrdinal()).toThrowError(expectedErrorMessage);
   });

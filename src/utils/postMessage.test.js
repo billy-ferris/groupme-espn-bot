@@ -10,7 +10,7 @@ const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
 const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
 describe("postMessage function", () => {
-  it("should call axios and log info to console when data is valid", async () => {
+  test("should call axios and log info to console when data is valid", async () => {
     const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
     const mockAxiosData = {
       bot_id: process.env.BOT_ID,
@@ -24,7 +24,7 @@ describe("postMessage function", () => {
     expect(consoleInfoSpyOn).toBeCalledTimes(1);
   });
 
-  it("should call axios and log error to console when request fails", async () => {
+  test("should call axios and log error to console when request fails", async () => {
     const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
     const mockAxiosData = {
       bot_id: process.env.BOT_ID,
@@ -38,7 +38,7 @@ describe("postMessage function", () => {
     expect(consoleErrorSpyOn).toBeCalledTimes(1);
   });
 
-  it("should throw an error if input is not a string", async () => {
+  test("should throw an error if input is not a string", async () => {
     const input = { message: "this should fail" };
     const expectedError = new Error("Message must be a string.");
 
