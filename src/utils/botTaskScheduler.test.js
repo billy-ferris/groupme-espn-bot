@@ -4,8 +4,14 @@ const handleMatchupsResponse = require("../responses/matchups");
 jest.mock("../responses/matchups");
 
 describe("botTaskScheduler function", () => {
-  jest.useFakeTimers();
-  botTaskScheduler();
+  beforeEach(() => {
+    jest.useFakeTimers();
+    return botTaskScheduler();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test.each([handleMatchupsResponse])(
     "should run task on scheduled time",

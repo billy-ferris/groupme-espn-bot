@@ -8,7 +8,7 @@ const { NODE_ENV } = process.env;
 require("dotenv").config();
 
 const middlewares = require("./middlewares");
-const api = require("./api/v1");
+const botTaskScheduler = require("./utils/botTaskScheduler");
 
 const app = express();
 
@@ -19,13 +19,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "/",
-  });
-});
-
-app.use("/api/v1", api);
+botTaskScheduler();
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
