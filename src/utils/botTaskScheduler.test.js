@@ -10,7 +10,7 @@ describe("botTaskScheduler function", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllTimers();
   });
 
   test.each([handleMatchupsResponse])(

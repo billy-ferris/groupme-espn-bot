@@ -13,96 +13,71 @@ jest.spyOn(console, "info").mockImplementation();
 const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
 describe("league helper", () => {
-  afterEach(() => {
-    jest.resetAllMocks();
+  let baseUrl;
+  let mockAxiosConfig;
+  let mockAxiosResponse;
+  let scoringPeriod;
+
+  beforeEach(() => {
+    scoringPeriod = 4;
+    baseUrl = `${ESPN_FFL_ENDPOINT}/seasons/${seasonId}/segments/0/leagues/${LEAGUE_ID}`;
+    mockAxiosConfig = {
+      headers: {
+        Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
+      },
+    };
+    mockAxiosResponse = {
+      data: {
+        gameId: 1,
+        id: 56951748,
+        members: [],
+        scoringPeriodId: scoringPeriod,
+        seasonId: 2021,
+        segmentId: 0,
+        settings: { name: "Testing league endpoint" },
+        status: {
+          currentMatchupPeriod: scoringPeriod,
+          isActive: true,
+          latestScoringPeriod: scoringPeriod,
+        },
+        teams: [],
+      },
+    };
   });
 
   describe("fetchLeagueEndpoint function", () => {
-    it("should call axios and return base league endpoint", async () => {
-      const baseUrl = `${ESPN_FFL_ENDPOINT}/seasons/${seasonId}/segments/0/leagues/${LEAGUE_ID}`;
-      const mockAxiosConfig = {
-        headers: {
-          Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
-        },
-      };
-      const expectedAxiosResponse = {
-        data: {
-          gameId: 1,
-          id: 56951748,
-          members: [],
-          scoringPeriodId: 4,
-          seasonId: 2021,
-          segmentId: 0,
-          settings: { name: "Testing league endpoint" },
-          status: {
-            currentMatchupPeriod: 4,
-            isActive: true,
-            latestScoringPeriod: 4,
-          },
-          teams: [],
-        },
-      };
-      axios.get.mockResolvedValueOnce(expectedAxiosResponse);
+    test("should call axios and return base league endpoint", async () => {
+      axios.get.mockResolvedValueOnce(mockAxiosResponse);
 
       await expect(getLeagueEndpoint()).resolves.toEqual(
-        expectedAxiosResponse.data
+        mockAxiosResponse.data
       );
 
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(axios.get).toHaveBeenCalledWith(baseUrl, mockAxiosConfig);
     });
 
-    it("should call axios and return league endpoint with passed parameters", async () => {
-      const scoringPeriod = 4;
-      const baseUrl = `${ESPN_FFL_ENDPOINT}/seasons/${seasonId}/segments/0/leagues/${LEAGUE_ID}`;
+    test("should call axios and return league endpoint with passed parameters", async () => {
       const urlParams = `?view=mMatchupScore&view=mScoreboard&view=mTeam&view=mRoster&scoringPeriodId=${scoringPeriod}`;
       const expectedUrl = `${baseUrl}${urlParams}`;
-      const mockAxiosConfig = {
-        headers: {
-          Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
-        },
-      };
-      const expectedAxiosResponse = {
-        data: {
-          gameId: 1,
-          id: 56951748,
-          members: [],
-          scoringPeriodId: scoringPeriod,
-          seasonId: 2021,
-          segmentId: 0,
-          settings: { name: "Testing league endpoint" },
-          status: {
-            currentMatchupPeriod: scoringPeriod,
-            isActive: true,
-            latestScoringPeriod: scoringPeriod,
-          },
-          teams: [],
-        },
-      };
-      axios.get.mockResolvedValueOnce(expectedAxiosResponse);
+      axios.get.mockResolvedValueOnce(mockAxiosResponse);
 
       await expect(getLeagueEndpoint(urlParams)).resolves.toEqual(
-        expectedAxiosResponse.data
+        mockAxiosResponse.data
       );
 
       expect(axios.get).toHaveBeenCalledTimes(1);
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, mockAxiosConfig);
     });
 
-    it("should call axios and log and throw an error on failure", async () => {
-      const apiUrl = `${ESPN_FFL_ENDPOINT}/seasons/${seasonId}/segments/0/leagues/${LEAGUE_ID}`;
-      const mockAxiosConfig = {
-        headers: {
-          Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
-        },
-      };
+    test("should call axios and log and throw an error on failure", async () => {
       const expectedError = new Error("Error fetching league endpoint.");
       axios.get.mockRejectedValueOnce(expectedError);
 
       await expect(getLeagueEndpoint()).rejects.toEqual(expectedError);
 
       expect(axios.get).toHaveBeenCalledTimes(1);
-      expect(axios.get).toHaveBeenCalledWith(apiUrl, mockAxiosConfig);
+      expect(axios.get).toHaveBeenCalledWith(baseUrl, mockAxiosConfig);
       expect(consoleErrorSpyOn).toBeCalledTimes(1);
     });
   });
