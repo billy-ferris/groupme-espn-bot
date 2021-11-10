@@ -1,7 +1,7 @@
-const ESPN_FFL_ENDPOINT = "https://fantasy.espn.com/apis/v3/games/ffl";
-const BASE_GROUPME_ENDPOINT = "https://api.groupme.com/v3";
+export const ESPN_FFL_ENDPOINT = "https://fantasy.espn.com/apis/v3/games/ffl";
+export const BASE_GROUPME_ENDPOINT = "https://api.groupme.com/v3";
 
-const slotCategoryIdToPositionMap = Object.freeze({
+export const slotCategoryIdToPositionMap = Object.freeze({
   0: "QB",
   1: "TQB",
   2: "RB",
@@ -29,7 +29,7 @@ const slotCategoryIdToPositionMap = Object.freeze({
   24: "Unknown",
 });
 
-const nflTeamIdToNFLTeam = Object.freeze({
+export const nflTeamIdToNFLTeam = Object.freeze({
   [-1]: "Bye",
   1: "Atlanta Falcons",
   2: "Buffalo Bills",
@@ -65,7 +65,7 @@ const nflTeamIdToNFLTeam = Object.freeze({
   34: "Houston Texans",
 });
 
-const nflTeamIdToNFLTeamAbbreviation = Object.freeze({
+export const nflTeamIdToNFLTeamAbbreviation = Object.freeze({
   [-1]: "Bye",
   1: "ATL",
   2: "BUF",
@@ -100,11 +100,3 @@ const nflTeamIdToNFLTeamAbbreviation = Object.freeze({
   33: "BAL",
   34: "HOU",
 });
-
-module.exports = {
-  ESPN_FFL_ENDPOINT,
-  BASE_GROUPME_ENDPOINT,
-  slotCategoryIdToPositionMap,
-  nflTeamIdToNFLTeam,
-  nflTeamIdToNFLTeamAbbreviation,
-};

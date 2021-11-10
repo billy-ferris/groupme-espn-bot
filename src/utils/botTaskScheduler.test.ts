@@ -1,12 +1,12 @@
-const botTaskScheduler = require("./botTaskScheduler");
-const handleMatchupsResponse = require("../responses/matchups");
+import botTaskScheduler from "./botTaskScheduler";
+import handleMatchupsResponse from "../responses/matchups";
 
 jest.mock("../responses/matchups");
 
 describe("botTaskScheduler function", () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    return botTaskScheduler();
+    botTaskScheduler();
   });
 
   afterEach(() => {

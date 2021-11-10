@@ -1,25 +1,28 @@
-const {
-  parseBoxscoresResponse,
-  mapBoxscoreObject,
-  mapBoxscoreTeamObject,
-  mapBoxscorePlayerObject,
-} = require("./boxscoreHelper");
+import axios, { AxiosResponse } from "axios";
+import getBoxscores from "./getBoxscores";
 
-jest.mock("axios", () => ({
-  get: jest.fn(),
-}));
+jest.mock("axios");
 
 jest.spyOn(console, "info").mockImplementation();
-jest.spyOn(console, "error").mockImplementation();
+const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
-describe("boxscore helper", () => {
-  let scoringPeriod;
-  let expectedAxiosResponse;
-  let expectedBoxscoreArray;
+describe("getBoxscores function", () => {
+  let scoringPeriod: number;
+  let mockAxios: jest.Mocked<typeof axios>;
+  let expectedAxiosResponse: AxiosResponse;
+  let expectedBoxscoreArray: any[];
+
+  beforeAll(() => {
+    mockAxios = axios as jest.Mocked<typeof axios>;
+  });
 
   beforeEach(() => {
     scoringPeriod = 1;
     expectedAxiosResponse = {
+      config: {},
+      headers: {},
+      status: 0,
+      statusText: "",
       data: {
         gameId: 1,
         id: 56951748,
@@ -29,7 +32,7 @@ describe("boxscore helper", () => {
               teamId: 1,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 0,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -71,7 +74,7 @@ describe("boxscore helper", () => {
               teamId: 2,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 0,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -117,7 +120,7 @@ describe("boxscore helper", () => {
               teamId: 3,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 0,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -159,7 +162,7 @@ describe("boxscore helper", () => {
               teamId: 4,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 0,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -246,7 +249,7 @@ describe("boxscore helper", () => {
           playoffSeed: 1,
           totalPoints: 0,
           totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
+          totalProjectedPointsLive: 0,
           record: {
             wins: 1,
             losses: 0,
@@ -290,7 +293,7 @@ describe("boxscore helper", () => {
           playoffSeed: 2,
           totalPoints: 0,
           totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
+          totalProjectedPointsLive: 0,
           record: {
             wins: 1,
             losses: 0,
@@ -336,7 +339,7 @@ describe("boxscore helper", () => {
           playoffSeed: 3,
           totalPoints: 0,
           totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
+          totalProjectedPointsLive: 0,
           record: {
             wins: 1,
             losses: 0,
@@ -380,7 +383,7 @@ describe("boxscore helper", () => {
           playoffSeed: 4,
           totalPoints: 0,
           totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
+          totalProjectedPointsLive: 0,
           record: {
             wins: 1,
             losses: 0,
@@ -421,44 +424,23 @@ describe("boxscore helper", () => {
     ];
   });
 
-  describe("parseBoxscoresResponse function", () => {
-    test("should return the correctly formatted boxscore array", async () => {
-      expect(
-        parseBoxscoresResponse(expectedAxiosResponse.data, scoringPeriod)
-      ).toEqual(expectedBoxscoreArray);
-    });
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  describe("mapBoxscoreTeamObject function", () => {
-    test("should return the correctly formatted team in boxscore", async () => {
-      expect(
-        mapBoxscoreTeamObject(
-          expectedAxiosResponse.data.schedule[0].home,
-          expectedAxiosResponse.data.teams
-        )
-      ).toEqual(expectedBoxscoreArray[0].homeTeam);
-    });
+  test("should return the correctly formatted boxscore response of week", async () => {
+    mockAxios.get.mockResolvedValueOnce(expectedAxiosResponse);
+
+    await expect(getBoxscores(scoringPeriod)).resolves.toEqual(
+      expectedBoxscoreArray
+    );
   });
 
-  describe("mapBoxscorePlayerObject function", () => {
-    test("should return the correctly formatted team in boxscore", async () => {
-      expect(
-        mapBoxscorePlayerObject(
-          expectedAxiosResponse.data.schedule[0].home
-            .rosterForCurrentScoringPeriod.entries[0]
-        )
-      ).toEqual(expectedBoxscoreArray[0].homeTeam.roster[0]);
-    });
-  });
+  test("should log and throw an error on failure", async () => {
+    const expectedError = new Error("Error fetching boxscores.");
 
-  describe("mapBoxscoreObject function", () => {
-    test("should return the correctly formatted boxscore object", async () => {
-      expect(
-        mapBoxscoreObject(
-          expectedAxiosResponse.data.schedule[0],
-          expectedAxiosResponse.data.teams
-        )
-      ).toEqual(expectedBoxscoreArray[0]);
-    });
+    await expect(getBoxscores(scoringPeriod)).rejects.toEqual(expectedError);
+
+    expect(consoleErrorSpyOn).toBeCalledTimes(1);
   });
 });

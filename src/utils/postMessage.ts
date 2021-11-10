@@ -1,12 +1,10 @@
-const axios = require("axios");
-const { BASE_GROUPME_ENDPOINT } = require("../consts");
+import axios from "axios";
+import { BASE_GROUPME_ENDPOINT } from "../consts";
+
 const { BOT_ID } = process.env;
 
-const postMessage = async (message) => {
+const postMessage = async (message: string): Promise<void> => {
   const url = `${BASE_GROUPME_ENDPOINT}/bots/post`;
-  if (typeof message !== "string") {
-    throw new Error("Message must be a string.");
-  }
   const data = {
     bot_id: BOT_ID,
     text: message,
@@ -17,6 +15,4 @@ const postMessage = async (message) => {
     .catch((error) => console.error("Error posting message:", error.message));
 };
 
-module.exports = {
-  postMessage,
-};
+export default postMessage;

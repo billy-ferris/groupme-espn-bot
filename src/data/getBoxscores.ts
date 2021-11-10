@@ -1,8 +1,8 @@
-const { getLeagueEndpoint } = require("../utils/getLeagueEndpoint");
-const { getCurrentWeek } = require("../utils/getCurrentWeek");
-const { parseBoxscoresResponse } = require("./helpers/boxscoreHelper");
+import getLeagueEndpoint from "../utils/getLeagueEndpoint";
+import getCurrentWeek from "../utils/getCurrentWeek";
+import { parseBoxscoresResponse } from "./helpers/boxscoreHelper";
 
-const getBoxscores = async (week) => {
+const getBoxscores = async (week?: number): Promise<Record<any, any>> => {
   let scoringPeriod;
   if (!week) {
     scoringPeriod = await getCurrentWeek();
@@ -20,6 +20,4 @@ const getBoxscores = async (week) => {
   }
 };
 
-module.exports = {
-  getBoxscores,
-};
+export default getBoxscores;

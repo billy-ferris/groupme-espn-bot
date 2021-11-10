@@ -1,4 +1,4 @@
-const addHeatScale = require("./addHeatScale");
+import addHeatScale from "./addHeatScale";
 
 describe("addHeatScale function", () => {
   test.each([
