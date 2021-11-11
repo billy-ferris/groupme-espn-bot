@@ -5,8 +5,21 @@ import {
   nflTeamIdToNFLTeamAbbreviation,
   slotCategoryIdToPositionMap,
 } from "../../consts";
+import {
+  Boxscore,
+  BoxscorePlayer,
+  BoxscoreTeam,
+  LeagueEndpointData,
+  LeagueEndpointSchedule,
+  LeagueEndpointPlayer,
+  LeagueEndpointScheduleTeam,
+  LeagueEndpointTeam,
+} from "../../types";
 
-export const parseBoxscoresResponse = ({ teams, schedule }: any, week: any) => {
+export const parseBoxscoresResponse = (
+  { teams, schedule }: LeagueEndpointData,
+  week: number
+): Boxscore[] => {
   const matchups = _.filter(schedule, {
     matchupPeriodId: week,
   });
@@ -19,7 +32,7 @@ export const mapBoxscorePlayerObject = ({
     appliedStatTotal,
     player: { id, firstName, lastName, proTeamId, eligibleSlots },
   },
-}: any) => {
+}: LeagueEndpointPlayer): BoxscorePlayer => {
   return {
     id,
     firstName,
@@ -41,16 +54,16 @@ export const mapBoxscoreTeamObject = (
     totalPointsLive,
     totalProjectedPointsLive,
     rosterForCurrentScoringPeriod: { entries },
-  }: any,
-  teams: any
-) => {
+  }: LeagueEndpointScheduleTeam,
+  teams: any[]
+): BoxscoreTeam => {
   const {
     location,
     nickname,
     abbrev,
     playoffSeed,
     record: { overall },
-  } = _.find(teams, (team) => teamId === team.id);
+  }: LeagueEndpointTeam = _.find(teams, (team) => teamId === team.id);
   return {
     id: teamId,
     name: `${location.trim()} ${nickname.trim()}`,
@@ -64,8 +77,11 @@ export const mapBoxscoreTeamObject = (
   };
 };
 
-export const mapBoxscoreObject = ({ away, home }: any, teams: any) => {
-  const boxscoreObject: Record<string, unknown> = {};
+export const mapBoxscoreObject = (
+  { away, home }: LeagueEndpointSchedule,
+  teams: LeagueEndpointTeam[]
+): Boxscore => {
+  const boxscoreObject: any = {};
   _.map(
     { away, home },
     (team, key) =>

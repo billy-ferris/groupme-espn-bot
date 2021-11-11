@@ -2,13 +2,18 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "declaration": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
     "outDir": "./lib",
+    "skipLibCheck": true,
     "strict": true,
-    "target": "es2020"
+    "strictNullChecks": true,
+    "target": "es2020",
   },
   "include": ["./src/**/*", "*.d.ts"],
   "exclude": [

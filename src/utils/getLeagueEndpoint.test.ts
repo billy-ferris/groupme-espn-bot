@@ -1,6 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import getLeagueEndpoint from "./getLeagueEndpoint";
 import { ESPN_FFL_ENDPOINT } from "../consts";
+import { LeagueEndpointData } from "../types";
+
+interface LeagueEndpointResponse extends AxiosResponse {
+  data: LeagueEndpointData;
+}
 
 const seasonId = Number(process.env.SEASON_ID);
 const { LEAGUE_ID, SWID, ESPN_S2 } = process.env;
@@ -14,7 +19,7 @@ describe("fetchLeagueEndpoint function", () => {
   let baseUrl: string;
   let mockAxios: jest.Mocked<typeof axios>;
   let mockAxiosConfig: AxiosRequestConfig;
-  let mockAxiosResponse: AxiosResponse;
+  let mockAxiosResponse: LeagueEndpointResponse;
   let scoringPeriod: number;
 
   beforeAll(() => {

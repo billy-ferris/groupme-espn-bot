@@ -2,8 +2,9 @@ import _ from "lodash";
 import getBoxscores from "../data/getBoxscores";
 import postMessage from "../utils/postMessage";
 import addOrdinal from "../utils/addOrdinal";
+import { Boxscore } from "../types";
 
-const createMatchupStringsArray = (boxscores: Record<any, any>) =>
+const createMatchupStringsArray = (boxscores: Boxscore[]): string[] =>
   _.map(
     boxscores,
     ({ homeTeam, awayTeam }) =>
@@ -16,14 +17,14 @@ const createMatchupStringsArray = (boxscores: Record<any, any>) =>
       `Projected Score: ${awayTeam.abbrev} ${awayTeam.totalProjectedPointsLive} - ${homeTeam.totalProjectedPointsLive} ${homeTeam.abbrev}`
   );
 
-const createMatchupsResponse = async (week?: number) => {
+const createMatchupsResponse = async (week?: number): Promise<string> => {
   const title = "This Week's Matchups";
   const boxscores = await getBoxscores(week);
   const matchups = createMatchupStringsArray(boxscores);
   return title + "\n\n" + matchups.join("\n\n");
 };
 
-const handleMatchupsResponse = async (week?: number) => {
+const handleMatchupsResponse = async (week?: number): Promise<void> => {
   try {
     const message = await createMatchupsResponse(week);
     await postMessage(message);
