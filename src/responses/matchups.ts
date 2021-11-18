@@ -1,9 +1,10 @@
-const _ = require("lodash");
-const { getBoxscores } = require("../data/getBoxscores");
-const { postMessage } = require("../utils/postMessage");
-const addOrdinal = require("../utils/addOrdinal");
+import _ from "lodash";
+import getBoxscores from "../data/getBoxscores";
+import postMessage from "../utils/postMessage";
+import addOrdinal from "../utils/addOrdinal";
+import { Boxscore } from "../types";
 
-const createMatchupStringsArray = (boxscores) =>
+const createMatchupStringsArray = (boxscores: Boxscore[]): string[] =>
   _.map(
     boxscores,
     ({ homeTeam, awayTeam }) =>
@@ -16,14 +17,14 @@ const createMatchupStringsArray = (boxscores) =>
       `Projected Score: ${awayTeam.abbrev} ${awayTeam.totalProjectedPointsLive} - ${homeTeam.totalProjectedPointsLive} ${homeTeam.abbrev}`
   );
 
-const createMatchupsResponse = async (week) => {
+const createMatchupsResponse = async (week?: number): Promise<string> => {
   const title = "This Week's Matchups";
   const boxscores = await getBoxscores(week);
   const matchups = createMatchupStringsArray(boxscores);
   return title + "\n\n" + matchups.join("\n\n");
 };
 
-const handleMatchupsResponse = async (week) => {
+const handleMatchupsResponse = async (week?: number): Promise<void> => {
   try {
     const message = await createMatchupsResponse(week);
     await postMessage(message);
@@ -33,4 +34,4 @@ const handleMatchupsResponse = async (week) => {
   }
 };
 
-module.exports = handleMatchupsResponse;
+export default handleMatchupsResponse;

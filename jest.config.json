@@ -1,0 +1,8 @@
+{
+  "clearMocks": true,
+  "coveragePathIgnorePatterns": [
+    "/node_modules/"
+  ],
+  "preset": "ts-jest",
+  "testEnvironment": "node"
+}

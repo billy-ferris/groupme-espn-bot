@@ -1,6 +1,6 @@
-const { getLeagueEndpoint } = require("./getLeagueEndpoint");
+import getLeagueEndpoint from "./getLeagueEndpoint";
 
-const getCurrentWeek = async () => {
+const getCurrentWeek = async (): Promise<number> => {
   try {
     const { scoringPeriodId } = await getLeagueEndpoint();
     console.info("Successfully got current week: ", scoringPeriodId);
@@ -11,6 +11,4 @@ const getCurrentWeek = async () => {
   }
 };
 
-module.exports = {
-  getCurrentWeek,
-};
+export default getCurrentWeek;

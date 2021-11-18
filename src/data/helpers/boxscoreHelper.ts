@@ -1,25 +1,38 @@
-const _ = require("lodash");
-const roundNumberTo = require("../../utils/roundNumberTo");
-const {
+import _ from "lodash";
+import roundNumberTo from "../../utils/roundNumberTo";
+import {
   nflTeamIdToNFLTeam,
   nflTeamIdToNFLTeamAbbreviation,
   slotCategoryIdToPositionMap,
-} = require("../../consts");
+} from "../../consts";
+import {
+  Boxscore,
+  BoxscorePlayer,
+  BoxscoreTeam,
+  LeagueEndpointData,
+  LeagueEndpointSchedule,
+  LeagueEndpointPlayer,
+  LeagueEndpointScheduleTeam,
+  LeagueEndpointTeam,
+} from "../../types";
 
-const parseBoxscoresResponse = ({ teams, schedule }, week) => {
+export const parseBoxscoresResponse = (
+  { teams, schedule }: LeagueEndpointData,
+  week: number
+): Boxscore[] => {
   const matchups = _.filter(schedule, {
     matchupPeriodId: week,
   });
   return _.map(matchups, (matchup) => mapBoxscoreObject(matchup, teams));
 };
 
-const mapBoxscorePlayerObject = ({
+export const mapBoxscorePlayerObject = ({
   lineupSlotId,
   playerPoolEntry: {
     appliedStatTotal,
     player: { id, firstName, lastName, proTeamId, eligibleSlots },
   },
-}) => {
+}: LeagueEndpointPlayer): BoxscorePlayer => {
   return {
     id,
     firstName,
@@ -34,23 +47,23 @@ const mapBoxscorePlayerObject = ({
   };
 };
 
-const mapBoxscoreTeamObject = (
+export const mapBoxscoreTeamObject = (
   {
     teamId,
     totalPoints,
     totalPointsLive,
     totalProjectedPointsLive,
     rosterForCurrentScoringPeriod: { entries },
-  },
-  teams
-) => {
+  }: LeagueEndpointScheduleTeam,
+  teams: any[]
+): BoxscoreTeam => {
   const {
     location,
     nickname,
     abbrev,
     playoffSeed,
     record: { overall },
-  } = _.find(teams, (team) => teamId === team.id);
+  }: LeagueEndpointTeam = _.find(teams, (team) => teamId === team.id);
   return {
     id: teamId,
     name: `${location.trim()} ${nickname.trim()}`,
@@ -64,19 +77,15 @@ const mapBoxscoreTeamObject = (
   };
 };
 
-const mapBoxscoreObject = ({ away, home }, teams) => {
-  let boxscoreObject = {};
+export const mapBoxscoreObject = (
+  { away, home }: LeagueEndpointSchedule,
+  teams: LeagueEndpointTeam[]
+): Boxscore => {
+  const boxscoreObject: any = {};
   _.map(
     { away, home },
     (team, key) =>
       (boxscoreObject[`${key}Team`] = mapBoxscoreTeamObject(team, teams))
   );
   return boxscoreObject;
-};
-
-module.exports = {
-  parseBoxscoresResponse,
-  mapBoxscoreObject,
-  mapBoxscoreTeamObject,
-  mapBoxscorePlayerObject,
 };

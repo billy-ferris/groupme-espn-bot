@@ -1,0 +1,60 @@
+{
+  "env": {
+    "es6": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "extends": [
+    "prettier",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["prettier"],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "prettier/prettier": "error",
+    "camelcase": 0,
+    "comma-dangle": 0,
+    "implicit-arrow-linebreak": 0,
+    "no-param-reassign": 0,
+    "no-return-assign": 0,
+    "no-underscore-dangle": 0,
+    "object-curly-newline": 0,
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "jest/no-standalone-expect": [
+      "error",
+      {
+        "additionalTestBlockFunctions": [
+          "beforeEach"
+        ]
+      }
+    ],
+    "jest/no-conditional-expect": "off",
+    "jest/no-try-expect": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": [
+        "*.test.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "off"
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-const roundNumberTo = require("./roundNumberTo");
+import roundNumberTo from "./roundNumberTo";
 
 describe("roundNumberTo function", () => {
   test.each([
