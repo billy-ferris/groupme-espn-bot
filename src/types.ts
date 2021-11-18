@@ -10,7 +10,7 @@ export interface LeagueEndpointTeam {
       ties: number;
     };
   };
-  playoffSeed: 1;
+  playoffSeed: number;
 }
 
 export interface LeagueEndpointPlayer {
@@ -54,7 +54,7 @@ export interface LeagueEndpointData extends Record<string, unknown> {
   };
   gameId: number;
   id: number;
-  members: unknown[];
+  members?: unknown[];
   scoringPeriodId: number;
   seasonId: number;
   segmentId: number;

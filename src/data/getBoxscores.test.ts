@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import getBoxscores from "./getBoxscores";
+import { Boxscore } from "../types";
 
 jest.mock("axios");
 
@@ -10,7 +11,7 @@ describe("getBoxscores function", () => {
   let scoringPeriod: number;
   let mockAxios: jest.Mocked<typeof axios>;
   let expectedAxiosResponse: AxiosResponse;
-  let expectedBoxscoreArray: any[];
+  let expectedBoxscoreArray: Boxscore[];
 
   beforeAll(() => {
     mockAxios = axios as jest.Mocked<typeof axios>;
