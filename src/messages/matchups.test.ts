@@ -1,18 +1,20 @@
-import { AxiosResponse } from "axios";
-import {
-  mapBoxscoreObject,
-  mapBoxscorePlayerObject,
-  mapBoxscoreTeamObject,
-  parseBoxscoresResponse,
-} from "./boxscoreHelper";
+import axios, { AxiosResponse } from "axios";
+import { postMatchups } from "./matchups";
+import { BASE_GROUPME_ENDPOINT } from "./consts";
 
-jest.spyOn(console, "info").mockImplementation();
+jest.mock("axios");
+
+const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
 jest.spyOn(console, "error").mockImplementation();
 
-describe("boxscore helper", () => {
+describe("createMatchupsResponse function", () => {
   let scoringPeriod: number;
+  let mockAxios: jest.Mocked<typeof axios>;
   let mockAxiosResponse: AxiosResponse;
-  let mockBoxscoreArray: any[];
+
+  beforeAll(() => {
+    mockAxios = axios as jest.Mocked<typeof axios>;
+  });
 
   beforeEach(() => {
     scoringPeriod = 1;
@@ -30,7 +32,7 @@ describe("boxscore helper", () => {
               teamId: 1,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 123.1234,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -72,7 +74,7 @@ describe("boxscore helper", () => {
               teamId: 2,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 123.1234,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -118,7 +120,7 @@ describe("boxscore helper", () => {
               teamId: 3,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 123.1234,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -160,7 +162,7 @@ describe("boxscore helper", () => {
               teamId: 4,
               totalPoints: 0,
               totalPointsLive: 0,
-              totalProjectedPointsLive: 1.1234,
+              totalProjectedPointsLive: 123.1234,
               rosterForCurrentScoringPeriod: {
                 entries: [
                   {
@@ -238,228 +240,34 @@ describe("boxscore helper", () => {
         ],
       },
     };
-    mockBoxscoreArray = [
-      {
-        homeTeam: {
-          id: 1,
-          name: "test entry",
-          abbrev: "TST",
-          playoffSeed: 1,
-          totalPoints: 0,
-          totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
-          record: {
-            wins: 1,
-            losses: 0,
-            ties: 0,
-          },
-          roster: [
-            {
-              eligibleSlots: ["RB", "RB/WR", "RB/WR/TE", "OP", "Bench", "IR"],
-              firstName: "Derrick",
-              id: 3043078,
-              lastName: "Henry",
-              lineupSlot: "RB",
-              teamAbbrev: "TEN",
-              teamName: "Tennessee Titans",
-              totalPoints: 0,
-            },
-            {
-              eligibleSlots: [
-                "RB/WR",
-                "WR",
-                "WR/TE",
-                "RB/WR/TE",
-                "OP",
-                "Bench",
-                "IR",
-              ],
-              firstName: "Tyreek",
-              id: 3116406,
-              lastName: "Hill",
-              lineupSlot: "WR",
-              teamAbbrev: "KC",
-              teamName: "Kansas City Chiefs",
-              totalPoints: 0,
-            },
-          ],
-        },
-        awayTeam: {
-          id: 2,
-          name: "test entry 2",
-          abbrev: "TST2",
-          playoffSeed: 2,
-          totalPoints: 0,
-          totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
-          record: {
-            wins: 1,
-            losses: 0,
-            ties: 0,
-          },
-          roster: [
-            {
-              eligibleSlots: ["RB", "RB/WR", "RB/WR/TE", "OP", "Bench", "IR"],
-              firstName: "Derrick",
-              id: 3043078,
-              lastName: "Henry",
-              lineupSlot: "RB",
-              teamAbbrev: "TEN",
-              teamName: "Tennessee Titans",
-              totalPoints: 0,
-            },
-            {
-              eligibleSlots: [
-                "RB/WR",
-                "WR",
-                "WR/TE",
-                "RB/WR/TE",
-                "OP",
-                "Bench",
-                "IR",
-              ],
-              firstName: "Tyreek",
-              id: 3116406,
-              lastName: "Hill",
-              lineupSlot: "WR",
-              teamAbbrev: "KC",
-              teamName: "Kansas City Chiefs",
-              totalPoints: 0,
-            },
-          ],
-        },
-      },
-      {
-        homeTeam: {
-          id: 3,
-          name: "test entry 3",
-          abbrev: "TST3",
-          playoffSeed: 3,
-          totalPoints: 0,
-          totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
-          record: {
-            wins: 1,
-            losses: 0,
-            ties: 0,
-          },
-          roster: [
-            {
-              eligibleSlots: ["RB", "RB/WR", "RB/WR/TE", "OP", "Bench", "IR"],
-              firstName: "Derrick",
-              id: 3043078,
-              lastName: "Henry",
-              lineupSlot: "RB",
-              teamAbbrev: "TEN",
-              teamName: "Tennessee Titans",
-              totalPoints: 0,
-            },
-            {
-              eligibleSlots: [
-                "RB/WR",
-                "WR",
-                "WR/TE",
-                "RB/WR/TE",
-                "OP",
-                "Bench",
-                "IR",
-              ],
-              firstName: "Tyreek",
-              id: 3116406,
-              lastName: "Hill",
-              lineupSlot: "WR",
-              teamAbbrev: "KC",
-              teamName: "Kansas City Chiefs",
-              totalPoints: 0,
-            },
-          ],
-        },
-        awayTeam: {
-          id: 4,
-          name: "test entry 4",
-          abbrev: "TST4",
-          playoffSeed: 4,
-          totalPoints: 0,
-          totalPointsLive: 0,
-          totalProjectedPointsLive: 1.1,
-          record: {
-            wins: 1,
-            losses: 0,
-            ties: 0,
-          },
-          roster: [
-            {
-              eligibleSlots: ["RB", "RB/WR", "RB/WR/TE", "OP", "Bench", "IR"],
-              firstName: "Derrick",
-              id: 3043078,
-              lastName: "Henry",
-              lineupSlot: "RB",
-              teamAbbrev: "TEN",
-              teamName: "Tennessee Titans",
-              totalPoints: 0,
-            },
-            {
-              eligibleSlots: [
-                "RB/WR",
-                "WR",
-                "WR/TE",
-                "RB/WR/TE",
-                "OP",
-                "Bench",
-                "IR",
-              ],
-              firstName: "Tyreek",
-              id: 3116406,
-              lastName: "Hill",
-              lineupSlot: "WR",
-              teamAbbrev: "KC",
-              teamName: "Kansas City Chiefs",
-              totalPoints: 0,
-            },
-          ],
-        },
-      },
+    mockAxios.get.mockResolvedValueOnce(mockAxiosResponse);
+  });
+
+  test("should send correct post object and log successful post with message", async () => {
+    const matchupStringsArray = [
+      "test entry 2 (1-0, 2nd) vs test entry (1-0, 1st)\nProjected Score: TST2 123.1 - 123.1 TST",
+      "test entry 4 (1-0, 4th) vs test entry 3 (1-0, 3rd)\nProjected Score: TST4 123.1 - 123.1 TST3",
     ];
+    const expectedMessageString =
+      "This Week's Matchups" + "\n\n" + matchupStringsArray.join("\n\n");
+    const mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
+    const mockAxiosData = {
+      bot_id: process.env.GROUPME_BOT_ID,
+      text: expectedMessageString,
+    };
+
+    mockAxios.post.mockResolvedValueOnce({ status: 200 });
+    await postMatchups(scoringPeriod);
+
+    expect(mockAxios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
+    expect(consoleInfoSpyOn).toBeCalledWith(
+      "Message successfully posted:",
+      expectedMessageString
+    );
   });
 
-  describe("parseBoxscoresResponse function", () => {
-    test("should return the correctly formatted boxscore array", async () => {
-      expect(
-        parseBoxscoresResponse(mockAxiosResponse.data, scoringPeriod)
-      ).toEqual(mockBoxscoreArray);
-    });
-  });
-
-  describe("mapBoxscoreTeamObject function", () => {
-    test("should return the correctly formatted team in boxscore", async () => {
-      expect(
-        mapBoxscoreTeamObject(
-          mockAxiosResponse.data.schedule[0].home,
-          mockAxiosResponse.data.teams
-        )
-      ).toEqual(mockBoxscoreArray[0].homeTeam);
-    });
-  });
-
-  describe("mapBoxscorePlayerObject function", () => {
-    test("should return the correctly formatted team in boxscore", async () => {
-      expect(
-        mapBoxscorePlayerObject(
-          mockAxiosResponse.data.schedule[0].home.rosterForCurrentScoringPeriod
-            .entries[0]
-        )
-      ).toEqual(mockBoxscoreArray[0].homeTeam.roster[0]);
-    });
-  });
-
-  describe("mapBoxscoreObject function", () => {
-    test("should return the correctly formatted boxscore object", async () => {
-      expect(
-        mapBoxscoreObject(
-          mockAxiosResponse.data.schedule[0],
-          mockAxiosResponse.data.teams
-        )
-      ).toEqual(mockBoxscoreArray[0]);
-    });
+  test("should throw error with message", async () => {
+    const expectedError = new Error("Error posting matchups.");
+    await expect(postMatchups(scoringPeriod)).rejects.toEqual(expectedError);
   });
 });
