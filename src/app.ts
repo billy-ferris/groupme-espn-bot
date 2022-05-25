@@ -7,7 +7,7 @@ import { config } from "dotenv";
 config();
 
 import middlewares from "./middlewares";
-import botTaskScheduler from "./utils/botTaskScheduler";
+import { taskScheduler } from "./task-scheduler";
 
 const app: Express = express();
 
@@ -17,7 +17,7 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(express.json());
 
-botTaskScheduler();
+taskScheduler();
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

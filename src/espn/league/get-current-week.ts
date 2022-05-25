@@ -1,8 +1,8 @@
-import getLeagueEndpoint from "./getLeagueEndpoint";
+import { getLeagueInfo } from "./get-league-info";
 
-const getCurrentWeek = async (): Promise<number> => {
+export const getCurrentWeek = async (): Promise<number> => {
   try {
-    const { scoringPeriodId } = await getLeagueEndpoint();
+    const { scoringPeriodId } = await getLeagueInfo();
     console.info("Successfully got current week: ", scoringPeriodId);
     return scoringPeriodId;
   } catch (error) {
@@ -10,5 +10,3 @@ const getCurrentWeek = async (): Promise<number> => {
     throw Error("Error fetching current week.");
   }
 };
-
-export default getCurrentWeek;

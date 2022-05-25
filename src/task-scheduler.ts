@@ -1,17 +1,15 @@
 import { CronJob } from "cron";
-import handleMatchupsResponse from "../responses/matchups";
+import { postMatchups } from "./messages/matchups";
 
-const botTaskScheduler = (): void => {
-  const jobs = [
+export const taskScheduler = (): void => {
+  const tasks = [
     {
       pattern: "*/5 * * * * *",
-      runTask: async () => {
-        await handleMatchupsResponse();
-      },
+      runTask: async () => await postMatchups(),
     },
   ];
 
-  jobs.forEach(
+  tasks.forEach(
     async ({
       pattern,
       runTask,
@@ -23,5 +21,3 @@ const botTaskScheduler = (): void => {
     }
   );
 };
-
-export default botTaskScheduler;
