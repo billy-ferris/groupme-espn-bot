@@ -45,18 +45,6 @@ export const addOrdinal = (number: number): string => {
   return number + "th";
 };
 
-export const postMessage = async (message: string): Promise<void> => {
-  const url = `${BASE_GROUPME_ENDPOINT}/bots/post`;
-  const data = {
-    bot_id: GROUPME_BOT_ID,
-    text: message,
-  };
-  await axios
-    .post(url, data)
-    .then(() => console.info("Message successfully posted:", data.text))
-    .catch((error) => console.error("Error posting message:", error.message));
-};
-
 const createMatchupTeamString = (team: BoxscoreTeam) =>
   `${team.name} (${team.record.wins}-${team.record.losses}, ${addOrdinal(
     team.playoffSeed
@@ -87,4 +75,16 @@ export const createMatchupsMessage = async (
 ): Promise<string> => {
   const matchups = await getMatchups(scoringPeriod);
   return "This Week's Matchups" + "\n\n" + matchups.join("\n\n");
+};
+
+export const postMessage = async (message: string): Promise<void> => {
+  const url = `${BASE_GROUPME_ENDPOINT}/bots/post`;
+  const data = {
+    bot_id: GROUPME_BOT_ID,
+    text: message,
+  };
+  await axios
+    .post(url, data)
+    .then(() => console.info("Message successfully posted:", data.text))
+    .catch((error) => console.error("Error posting message:", error.message));
 };

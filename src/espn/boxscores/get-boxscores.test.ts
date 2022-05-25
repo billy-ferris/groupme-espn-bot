@@ -436,9 +436,7 @@ describe("getBoxscores", () => {
 
   test("should log and throw an error on failure", async () => {
     const expectedError = new Error("Error fetching boxscores.");
-
     await expect(getBoxscores(scoringPeriod)).rejects.toEqual(expectedError);
-
     expect(consoleErrorSpy).toBeCalledTimes(1);
   });
 });

@@ -7,6 +7,12 @@ jest.mock("axios");
 const consoleInfoSpyOn = jest.spyOn(console, "info").mockImplementation();
 const consoleErrorSpyOn = jest.spyOn(console, "error").mockImplementation();
 
+const groupmeUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
+const mockAxiosArgs = {
+  bot_id: process.env.GROUPME_BOT_ID,
+  text: "test post message",
+};
+
 describe("messages helpers", () => {
   describe("addHeatScale", () => {
     test.each([
@@ -36,22 +42,11 @@ describe("messages helpers", () => {
       }
     );
   });
-
   describe("postMessage", () => {
     let mockAxios: jest.Mocked<typeof axios>;
-    let mockAxiosUrl: string;
-    let mockAxiosData: Record<string, any>;
-
-    beforeAll(() => {
-      mockAxios = axios as jest.Mocked<typeof axios>;
-    });
 
     beforeEach(() => {
-      mockAxiosUrl = `${BASE_GROUPME_ENDPOINT}/bots/post`;
-      mockAxiosData = {
-        bot_id: process.env.GROUPME_BOT_ID,
-        text: "test post message",
-      };
+      mockAxios = axios as jest.Mocked<typeof axios>;
     });
 
     afterEach(() => {
@@ -61,18 +56,18 @@ describe("messages helpers", () => {
     test("should call axios and log info to console when espn is valid", async () => {
       mockAxios.post.mockResolvedValueOnce({});
 
-      await postMessage(mockAxiosData.text);
+      await postMessage(mockAxiosArgs.text);
 
-      await expect(mockAxios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
+      await expect(mockAxios.post).toBeCalledWith(groupmeUrl, mockAxiosArgs);
       expect(consoleInfoSpyOn).toBeCalledTimes(1);
     });
 
     test("should call axios and log error to console when request fails", async () => {
       mockAxios.post.mockRejectedValueOnce(new Error());
 
-      await postMessage(mockAxiosData.text);
+      await postMessage(mockAxiosArgs.text);
 
-      await expect(mockAxios.post).toBeCalledWith(mockAxiosUrl, mockAxiosData);
+      await expect(mockAxios.post).toBeCalledWith(groupmeUrl, mockAxiosArgs);
       expect(consoleErrorSpyOn).toBeCalledTimes(1);
     });
   });

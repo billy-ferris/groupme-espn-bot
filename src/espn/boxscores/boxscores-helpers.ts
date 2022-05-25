@@ -87,12 +87,10 @@ export const createBoxscore = (
   teams: Team[]
 ): Boxscore => {
   const boxscoreObj = {} as Boxscore;
-
   Object.entries({ home, away }).map(
     ([key, team]) =>
       (boxscoreObj[`${key}Team`] = createBoxscoreTeam(team, teams))
   );
-
   return boxscoreObj;
 };
 
