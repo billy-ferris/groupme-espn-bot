@@ -4,7 +4,7 @@ import { postMatchups } from "./messages/matchups";
 export const taskScheduler = (): void => {
   const tasks = [
     {
-      pattern: "*/5 * * * * *",
+      pattern: "*/10 * * * * *",
       runTask: async () => await postMatchups(),
     },
   ];

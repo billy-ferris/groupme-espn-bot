@@ -20,8 +20,8 @@ export const getLeagueInfo = async (params?: string): Promise<LeagueInfo> => {
         Cookie: `SWID=${SWID}; espn_s2=${ESPN_S2}`,
       },
     })
-    .then((response) => {
-      return response.data;
+    .then(({ data }) => {
+      return data;
     })
     .catch((error) => {
       console.error("Error fetching league endpoint:\n", error);

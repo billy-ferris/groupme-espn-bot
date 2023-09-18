@@ -76,3 +76,4 @@ lib
 .serverless
 
 .idea
+!/lib/

@@ -64,17 +64,29 @@ const createMatchupString = ({
   `Projected Score: ${awayTeam.abbrev} ${awayTeam.totalProjectedPointsLive} - ${homeTeam.totalProjectedPointsLive} ${homeTeam.abbrev}`;
 
 const getMatchups = async (scoringPeriod?: number): Promise<string[]> => {
-  const boxscores = await getBoxscores(scoringPeriod);
-  return boxscores.map(({ homeTeam, awayTeam }) =>
-    createMatchupString({ awayTeam, homeTeam })
-  );
+  try {
+    const boxscores = await getBoxscores(scoringPeriod);
+    return boxscores.map(({ homeTeam, awayTeam }) =>
+      createMatchupString({ awayTeam, homeTeam })
+    );
+  } catch (error) {
+    console.error("Error fetching matchups:\n", error);
+    throw new Error("Error fetching matchups. See console for details.");
+  }
 };
 
 export const createMatchupsMessage = async (
   scoringPeriod?: number
 ): Promise<string> => {
-  const matchups = await getMatchups(scoringPeriod);
-  return "This Week's Matchups" + "\n\n" + matchups.join("\n\n");
+  try {
+    const matchups = await getMatchups(scoringPeriod);
+    return `This Week's Matchups\n\n${matchups.join("\n\n")}`;
+  } catch (error) {
+    console.error("Error creating matchups message:\n", error);
+    throw new Error(
+      "Error creating matchups message. See console for details."
+    );
+  }
 };
 
 export const postMessage = async (message: string): Promise<void> => {

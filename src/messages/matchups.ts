@@ -6,6 +6,6 @@ export const postMatchups = async (scoringPeriod?: number): Promise<void> => {
     await postMessage(message);
   } catch (error) {
     console.error("Error posting matchups:\n", error);
-    throw Error("Error posting matchups.");
+    throw Error("Error posting matchups. See console for details.");
   }
 };

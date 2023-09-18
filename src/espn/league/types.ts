@@ -1,8 +1,7 @@
 export interface Team {
   id: number;
+  name: string;
   abbrev: string;
-  location: string;
-  nickname: string;
   record: {
     overall: {
       wins: number;
